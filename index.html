@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loading… | coyure.dev</title>
+  <!-- Pixel‑retro font for the game vibe -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    /* ====================  COLOR PALETTE  ==================== */
+    :root {
+      --bg:   #000000; /* pure black background */
+      --fg:   #ffffff; /* white text & border */
+      --fill: #1db954; /* vibrant green progress */
+      --track:#000000; /* empty bar (same as bg) */
+    }
+
+    /* ====================  GLOBAL STYLES  ==================== */
+    * { box-sizing: border-box; }
+    html,body { height:100%; margin:0; }
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      font-family:"Press Start 2P", monospace;
+      text-align:center;
+      user-select:none;
+    }
+
+    /* ====================  HEADLINE  ==================== */
+    #title {
+      font-size: clamp(1rem, 4vw, 1.8rem);
+      letter-spacing: 2px;
+      margin: 0 0 2.5rem 0;
+      animation: blink 1.2s steps(2, start) infinite;
+    }
+    @keyframes blink { 0%,50%{opacity:1} 50.01%,100%{opacity:0.6} }
+
+    /* ====================  PROGRESS BAR  ==================== */
+    .bar {
+      width: 80%;
+      max-width: 680px;
+      height: 2.8rem;
+      border: 0.5rem solid var(--fg);
+      background: var(--track);
+      position: relative;
+      overflow: hidden;
+    }
+    .fill {
+      width: 0%;
+      height:100%;
+      background: var(--fill);
+      animation: load 8s steps(99,end) forwards;
+    }
+    /* stop at 99% so a tiny slice is left empty */
+    @keyframes load { to { width: 99%; } }
+
+    /* ====================  PERCENT COUNTER  ==================== */
+    #percent {
+      margin-top: 1.2rem;
+      font-size: 0.9rem;
+      letter-spacing:1px;
+    }
+  </style>
+</head>
+<body>
+  <h1 id="title">LOADING</h1>
+
+  <div class="bar"><div class="fill" id="fill"></div></div>
+  <div id="percent">0%</div>
+
+  <script>
+    // ======= JS to sync numeric counter with CSS bar =======
+    const percentEl = document.getElementById("percent");
+    const titleEl   = document.getElementById("title");
+
+    let pct = 0;
+    const tick = 80; // 100 ticks * 80ms ≈ 8s (matches bar animation)
+    const timer = setInterval(() => {
+      pct++;
+      if (pct > 99) {
+        clearInterval(timer);
+        titleEl.textContent = "COMING SOON!";
+        titleEl.style.animation = "none"; // stop blinking
+        percentEl.textContent = "99%";    // keep at 99
+        return;
+      }
+      percentEl.textContent = pct + "%";
+    }, tick);
+  </script>
+</body>
+</html>
